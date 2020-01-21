@@ -184,7 +184,7 @@
    	     random = Math.floor(Math.random() * 10);
    	   } while (random < 3);  
 
-   	   var newPolygon = new Path.RegularPolygon(point, random, 300);
+   	   var newPolygon = new Path.RegularPolygon(point, random, 500);
    	   newPolygon.fillColor = keyData[event.key].color;
    	   keyData[event.key].sound.play();
 	   polygons.push(newPolygon);
