@@ -12,10 +12,7 @@ canvas{
 
 .absolute-text{
 	color: white;
-	left: 30%;
+	left: 37%;
 	position: absolute;
 	z-index: 1;
-}
-.middle{
-	left: 35%;
 }
