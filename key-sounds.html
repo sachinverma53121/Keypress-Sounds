@@ -168,6 +168,7 @@
 		}
 	}
  	
+ 	// Generate a Graph
  	var width, height, center;
 	var points = 10;
 	var smooth = true;
@@ -175,7 +176,6 @@
 	var mousePos = view.center / 2;
 	var pathHeight = mousePos.y;
 	path.fillColor = 'black';
-	initializePath();
 
 	function initializePath() {
 		center = view.center;
@@ -192,6 +192,22 @@
 	}
 
 
+	// Generate a Chain
+	// The amount of points in the path:
+	var points = 25;
+
+	// The distance between the points:
+	var length = 35;
+
+	var cpath = new Path({
+		strokeColor: '#E4141B',
+		strokeWidth: 15,
+		strokeCap: 'round'
+	});
+
+	var start = view.center / [10, 1];
+	for (var i = 0; i < points; i++)
+		cpath.add(start + new Point(i * length, 0));
 
 
 
@@ -207,8 +223,7 @@
 
 
 
-
-
+	// Generate Ramdom Polygons
 	var polygons = [];
 
 	 function onKeyDown(event) {
@@ -255,7 +270,20 @@
 
 	  function onMouseMove(event) {
 		mousePos = event.point;
+
+
+		cpath.firstSegment.point = event.point;
+		for (var i = 0; i < points - 1; i++) {
+			var segment = cpath.segments[i];
+			var nextSegment = segment.next;
+			var vector = segment.point - nextSegment.point;
+			vector.length = length;
+			nextSegment.point = segment.point - vector;
+		}
+		cpath.smooth({ type: 'continuous' });
   	  }
+
+
 
   	  function onMouseDown(event) {
 		smooth = !smooth;
@@ -267,12 +295,19 @@
 					segment.handleIn = segment.handleOut = null;
 				}
 		    }
+		    cpath.fullySelected = true;
+			cpath.strokeColor = '#e08285';
 	  }
 
-// Reposition the path whenever the window is resized:
-function onResize(event) {
-	initializePath();
-}
+	  function onMouseUp(event) {
+		cpath.fullySelected = false;
+		cpath.strokeColor = '#e4141b';
+	  }
+
+	  // Reposition the path whenever the window is resized:
+      function onResize(event) {
+		initializePath();
+      }
 
 
     </script>
