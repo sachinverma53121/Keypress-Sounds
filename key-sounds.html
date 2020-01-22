@@ -33,7 +33,7 @@
 		path.fullySelected = true;
 	}
 
-    // =============================================================== //
+        // =============================================================== //
 	// Generate a Chain
 	// The amount of points in the path:
 	var points = 25;
@@ -212,6 +212,7 @@
 			color: '#2c3e50'
 		}
 	}
+	
 	// Generate Ramdom Polygons
 	var polygons = [];
 
@@ -223,10 +224,10 @@
 	   var point = maxPoint * randomPoint;
 	   var random = 3;
 
-       // random no. of sides for polygon
-       do {
-   	     random = Math.floor(Math.random() * 10);
-   	   } while (random < 3);  
+           // random no. of sides for polygon
+          do {
+   	      random = Math.floor(Math.random() * 10);
+   	  } while (random < 3);  
 
    	   var newPolygon = new Path.RegularPolygon(point, random, 300);
    	   newPolygon.fillColor = keyData[event.key].color;
@@ -243,20 +244,21 @@
 	    polygons[i].fillColor.hue += 1;
 	    polygons[i].scale(.9);
 	    if(polygons[i].area < 1){
-          polygons[i].remove(); // remove the polygon from the canvas
-          polygons.splice(i, 1); // remove the polygon from the array
-          i--; // decrement i so that the loop doesn't skip a polygon because of .splice()
-        }
-	  }
-	  pathHeight += (center.y - mousePos.y - pathHeight) / 10;
-	  for (var i = 1; i < points; i++) {
+              polygons[i].remove(); // remove the polygon from the canvas
+              polygons.splice(i, 1); // remove the polygon from the array
+              i--; // decrement i so that the loop doesn't skip a polygon because of .splice()
+            }
+	   }
+	   
+	   pathHeight += (center.y - mousePos.y - pathHeight) / 10;
+	   for (var i = 1; i < points; i++) {
 		var sinSeed = event.count + (i + i % 10) * 100;
 		var sinHeight = Math.sin(sinSeed / 200) * pathHeight;
 		var yPos = Math.sin(sinSeed / 100) * sinHeight + height;
 		path.segments[i].point.y = yPos;
-	  }
-	  if (smooth)
-	 	path.smooth({ type: 'continuous' });
+	   } 
+	   if (smooth)
+	   	path.smooth({ type: 'continuous' });
 	  }
 
 	  function onMouseMove(event) {
@@ -283,23 +285,23 @@
 			}
 	    }
 	    cpath.fullySelected = true;
-		cpath.strokeColor = '#e08285';
+	    cpath.strokeColor = '#e08285';
 	  }
 
 	  function onMouseUp(event) {
-		cpath.fullySelected = false;
-		cpath.strokeColor = '#e4141b';
+	     cpath.fullySelected = false;
+	     cpath.strokeColor = '#e4141b';
 	  }
 
-	  // Reposition the path whenever the window is resized:
-      function onResize(event) {
-		initializePath();
-      }
+       // Reposition the path whenever the window is resized:
+       function onResize(event) {
+	 initializePath();
+       }
     </script>
 
 </head>
 <body>
-	<h1 class="absolute-text middle">- Press Any Key! (a-z) <br>- Hover/Click Mouse !!</h1>
+    <h1 class="absolute-text middle">- Press Any Key! (a-z) <br>- Hover/Click Mouse !!</h1>
     <canvas id="myCanvas" resize></canvas>
 </body>
 </html>
