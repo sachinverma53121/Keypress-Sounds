@@ -167,6 +167,46 @@
 			color: '#2c3e50'
 		}
 	}
+ 	
+ 	var width, height, center;
+	var points = 10;
+	var smooth = true;
+	var path = new Path();
+	var mousePos = view.center / 2;
+	var pathHeight = mousePos.y;
+	path.fillColor = 'black';
+	initializePath();
+
+	function initializePath() {
+		center = view.center;
+		width = view.size.width;
+		height = view.size.height / 2;
+		path.segments = [];
+		path.add(view.bounds.bottomLeft);
+		for (var i = 1; i < points; i++) {
+			var point = new Point(width / points * i, center.y);
+			path.add(point);
+		}
+		path.add(view.bounds.bottomRight);
+		path.fullySelected = true;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	var polygons = [];
@@ -184,7 +224,7 @@
    	     random = Math.floor(Math.random() * 10);
    	   } while (random < 3);  
 
-   	   var newPolygon = new Path.RegularPolygon(point, random, 500);
+   	   var newPolygon = new Path.RegularPolygon(point, random, 300);
    	   newPolygon.fillColor = keyData[event.key].color;
    	   keyData[event.key].sound.play();
 	   polygons.push(newPolygon);
@@ -201,12 +241,45 @@
           i--; // decrement i so that the loop doesn't skip a polygon because of .splice()
         }
 	  }
-	 }
+
+	  pathHeight += (center.y - mousePos.y - pathHeight) / 10;
+	  for (var i = 1; i < points; i++) {
+		var sinSeed = event.count + (i + i % 10) * 100;
+		var sinHeight = Math.sin(sinSeed / 200) * pathHeight;
+		var yPos = Math.sin(sinSeed / 100) * sinHeight + height;
+		path.segments[i].point.y = yPos;
+	  }
+	  if (smooth)
+	 	path.smooth({ type: 'continuous' });
+	  }
+
+	  function onMouseMove(event) {
+		mousePos = event.point;
+  	  }
+
+  	  function onMouseDown(event) {
+		smooth = !smooth;
+			if (!smooth) {
+				// If smooth has been turned off, we need to reset
+				// the handles of the path:
+				for (var i = 0, l = path.segments.length; i < l; i++) {
+					var segment = path.segments[i];
+					segment.handleIn = segment.handleOut = null;
+				}
+		    }
+	  }
+
+// Reposition the path whenever the window is resized:
+function onResize(event) {
+	initializePath();
+}
+
+
     </script>
 
 </head>
 <body>
-	<h1 class="absolute-text middle">Press any Keys (A-Z) !!!</h1>
+	<h1 class="absolute-text middle">- Press Any Key! (a-z) <br>- Hover/Click Mouse !!</h1>
     <canvas id="myCanvas" resize></canvas>
 
 	
