@@ -7,7 +7,52 @@
 	<script type="text/javascript" src="paper-full.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/howler/1.1.28/howler.js"></script>
 
-	<script type="text/paperscript" canvas="myCanvas">
+	<script type="text/paperscript" canvas="myCanvas"> 	
+
+ 	// Generate a Graph
+ 	var width, height, center;
+	var points = 10;
+	var smooth = true;
+	var path = new Path();
+	var mousePos = view.center / 2;
+	var pathHeight = mousePos.y;
+	path.fillColor = 'black';
+	initializePath();
+
+	function initializePath() {
+		center = view.center;
+		width = view.size.width;
+		height = view.size.height / 2;
+		path.segments = [];
+		path.add(view.bounds.bottomLeft);
+		for (var i = 1; i < points; i++) {
+			var point = new Point(width / points * i, center.y);
+			path.add(point);
+		}
+		path.add(view.bounds.bottomRight);
+		path.fullySelected = true;
+	}
+
+    // =============================================================== //
+	// Generate a Chain
+	// The amount of points in the path:
+	var points = 25;
+
+	// The distance between the points:
+	var length = 35;
+
+	var cpath = new Path({
+		strokeColor: '#E4141B',
+		strokeWidth: 15,
+		strokeCap: 'round'
+	});
+
+	var start = view.center / [10, 1];
+	for (var i = 0; i < points; i++)
+		cpath.add(start + new Point(i * length, 0));
+
+
+	// =============================================================== //
 	// sound and color for each alphabet key
 	var keyData = {
 		q: {
@@ -167,62 +212,6 @@
 			color: '#2c3e50'
 		}
 	}
- 	
- 	// Generate a Graph
- 	var width, height, center;
-	var points = 10;
-	var smooth = true;
-	var path = new Path();
-	var mousePos = view.center / 2;
-	var pathHeight = mousePos.y;
-	path.fillColor = 'black';
-
-	function initializePath() {
-		center = view.center;
-		width = view.size.width;
-		height = view.size.height / 2;
-		path.segments = [];
-		path.add(view.bounds.bottomLeft);
-		for (var i = 1; i < points; i++) {
-			var point = new Point(width / points * i, center.y);
-			path.add(point);
-		}
-		path.add(view.bounds.bottomRight);
-		path.fullySelected = true;
-	}
-
-
-	// Generate a Chain
-	// The amount of points in the path:
-	var points = 25;
-
-	// The distance between the points:
-	var length = 35;
-
-	var cpath = new Path({
-		strokeColor: '#E4141B',
-		strokeWidth: 15,
-		strokeCap: 'round'
-	});
-
-	var start = view.center / [10, 1];
-	for (var i = 0; i < points; i++)
-		cpath.add(start + new Point(i * length, 0));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// Generate Ramdom Polygons
 	var polygons = [];
 
@@ -246,6 +235,9 @@
 	  }
 	 }
 
+	 // =============================================================== //
+	 // Events
+
 	 function onFrame(event) {
 	  for(var i = 0; i < polygons.length; i++){
 	    polygons[i].fillColor.hue += 1;
@@ -256,7 +248,6 @@
           i--; // decrement i so that the loop doesn't skip a polygon because of .splice()
         }
 	  }
-
 	  pathHeight += (center.y - mousePos.y - pathHeight) / 10;
 	  for (var i = 1; i < points; i++) {
 		var sinSeed = event.count + (i + i % 10) * 100;
@@ -270,8 +261,6 @@
 
 	  function onMouseMove(event) {
 		mousePos = event.point;
-
-
 		cpath.firstSegment.point = event.point;
 		for (var i = 0; i < points - 1; i++) {
 			var segment = cpath.segments[i];
@@ -283,20 +272,18 @@
 		cpath.smooth({ type: 'continuous' });
   	  }
 
-
-
   	  function onMouseDown(event) {
 		smooth = !smooth;
-			if (!smooth) {
-				// If smooth has been turned off, we need to reset
-				// the handles of the path:
-				for (var i = 0, l = path.segments.length; i < l; i++) {
-					var segment = path.segments[i];
-					segment.handleIn = segment.handleOut = null;
-				}
-		    }
-		    cpath.fullySelected = true;
-			cpath.strokeColor = '#e08285';
+		if (!smooth) {
+			// If smooth has been turned off, we need to reset
+			// the handles of the path:
+			for (var i = 0, l = path.segments.length; i < l; i++) {
+				var segment = path.segments[i];
+				segment.handleIn = segment.handleOut = null;
+			}
+	    }
+	    cpath.fullySelected = true;
+		cpath.strokeColor = '#e08285';
 	  }
 
 	  function onMouseUp(event) {
@@ -308,16 +295,11 @@
       function onResize(event) {
 		initializePath();
       }
-
-
     </script>
 
 </head>
 <body>
 	<h1 class="absolute-text middle">- Press Any Key! (a-z) <br>- Hover/Click Mouse !!</h1>
     <canvas id="myCanvas" resize></canvas>
-
-	
-
 </body>
 </html>
