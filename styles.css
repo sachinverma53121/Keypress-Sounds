@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu&display=swap');
 body, html{
 	margin: 0;
 	height: 100vh;
@@ -12,7 +13,9 @@ canvas{
 
 .absolute-text{
 	color: white;
-	left: 37%;
+	font-family: 'Ubuntu', sans-serif;
+	left: 36%;
+	text-align: center;
 	position: absolute;
 	z-index: 1;
 }
